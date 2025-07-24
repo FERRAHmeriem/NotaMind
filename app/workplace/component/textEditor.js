@@ -8,8 +8,9 @@ import Highlight from '@tiptap/extension-highlight'
 import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Color from '@tiptap/extension-color'
+import { api } from '@/convex/_generated/api';
 
-const TextEditor = () => {
+const TextEditor = ({fileId}) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -30,6 +31,10 @@ const TextEditor = () => {
     },
     immediatelyRender: false,
   })
+
+
+
+  const getNotes = useQuery(api.notes.getNotes, fileId : fileId);
 
   return (
     <div className="overflow-auto h-[90vh] mb-6">

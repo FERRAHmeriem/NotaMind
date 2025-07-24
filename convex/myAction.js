@@ -43,13 +43,10 @@ export const Search = action({
     { ctx }
   );
 
-  const results = await vectorStore.similaritySearch(args.query, 5); // mets 5 au lieu de 1 pour tester
-  console.log("📌 Results from similaritySearch:", results);
-
+  const results = await vectorStore.similaritySearch(args.query, 5); 
   const filtered = results.filter(
-    (doc) => doc.metadata == args.fileId
-  );
-  console.log("📌 Filtered results for fileId:", args.fileId, filtered );
+  (doc) => Object.values(doc.metadata).join('') === args.fileId
+);
 
   return JSON.stringify(filtered);
 }

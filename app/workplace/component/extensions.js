@@ -1,7 +1,9 @@
 'use client';
 
+import ChatSession from '@/Configs/ModelAi';
 import { api } from '@/convex/_generated/api';
-import { useAction } from 'convex/react';
+import { useUser } from '@clerk/nextjs';
+import { useAction, useMutation, useQuery } from 'convex/react';
 import {
   AlignCenter,
   AlignJustify,
@@ -10,6 +12,7 @@ import {
   Bold,
   Highlighter,
   Italic,
+  LoaderCircle,
   Sparkle,
   Strikethrough,
   Underline,
@@ -21,7 +24,11 @@ function Extensions({ editor }) {
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [activeAlign, setActiveAlign] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const {user} = useUser()
   const { fileId } = useParams();
+  const addNotes = useMutation(api.notes.AddNote)
+  
   useEffect(() => {
     if (!editor) return;
 
@@ -51,24 +58,56 @@ function Extensions({ editor }) {
       active ? 'text-purple-600' : 'text-gray-600'
     }`;
 
-    const Search = useAction(api.myAction.Search);
+  const Search = useAction(api.myAction.Search);
 
-    const handleClickAi = async () => {
-      const selectedText = editor.state.doc.textBetween(
-        editor.state.selection.from, 
-        editor.state.selection.to, 
-        ' ',
-      );
-      console.log(selectedText , fileId);
-      
+  const handleClickAi = async () => {
+    const selectedText = editor.state.doc.textBetween(
+      editor.state.selection.from,
+      editor.state.selection.to,
+      ' ',
+    );
 
-      const response = await Search({ 
+    setLoading(true); // ✅ Start loading
+
+    try {
+      const response = await Search({
         query: selectedText,
-        fileId: fileId,
+        fileId,
       });
-      console.log('response' , response);
-      
+
+      const unformattedAns = JSON.parse(response);
+      console.log("importent", response);
+
+      let answer = '';
+      unformattedAns?.forEach((item) => (answer += item.pageContent + ' '));
+
+      const fullPrompt = `
+ "Answer the following question using the provided context.\n\nContext:\n${answer}\n\nQuestion: ${selectedText}"`;
+
+      console.log('ChatSession:', ChatSession);
+      const AiModelResult = await ChatSession.sendMessage(fullPrompt);
+      const AllText = editor.getHTML();
+      const finalAnswer = await AiModelResult.response.text();
+      editor.commands.setContent(
+        AllText +
+          '<p><strong></br></br>Réponse:</br></strong> ' +
+          finalAnswer +
+          '</p>'
+      );
+    } catch (error) {
+      editor.commands.insertContent(
+        `<p><strong>Erreur:</strong> Une erreur est survenue.</p>`
+      );
+    } finally {
+      setLoading(false); // ✅ End loading
     }
+    addNotes({
+      notes : editor.getHTML(),
+      fileId : fileId,
+      createdBy : user?.primaryEmailAddress?.emailAddress
+    })
+  };
+
   return (
     editor && (
       <div className="p-5">
@@ -135,16 +174,29 @@ function Extensions({ editor }) {
             >
               <AlignJustify />
             </button>
+
+            {/* Sparkle AI Button */}
             <div className="relative group">
               <button
                 onClick={handleClickAi}
-                className="p-3 text-purple-600 bg-white rounded-full transition-all duration-300 shadow-md hover:rotate-6 hover:scale-110 hover:bg-gradient-to-r hover:from-fuchsia-500 hover:to-purple-500 hover:text-white"
+                disabled={loading}
+                className={`p-3 text-purple-600 bg-white rounded-full transition-all duration-300 shadow-md ${
+                  loading
+                    ? 'opacity-70 cursor-not-allowed'
+                    : 'hover:rotate-6 hover:scale-110 hover:bg-gradient-to-r hover:from-fuchsia-500 hover:to-purple-500 hover:text-white'
+                }`}
               >
-                <Sparkle className="w-6 h-6 transition-all duration-300 group-hover:rotate-12 group-hover:scale-125" />
+                {loading ? (
+                  <span className="text-xs animate-pulse font-medium"><LoaderCircle className="animate-spin text-purple-500" /></span>
+                ) : (
+                  <Sparkle className="w-6 h-6 transition-all duration-300 group-hover:rotate-12 group-hover:scale-125" />
+                )}
               </button>
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all bg-purple-400 text-stone-800 text-xs px-2 py-1 rounded shadow">
-                Lancer l'IA ✨
-              </span>
+              {!loading && (
+                <span className=" absolute -bottom-8  -translate-x-1/2 scale-0 group-hover:scale-100 transition-all bg-purple-400 text-stone-800 text-xs px-2 py-1 rounded shadow">
+                  Lancer l'IA ✨
+                </span>
+              )}
             </div>
           </div>
         </div>
