@@ -26,9 +26,6 @@ export default function Home() {
 
   useEffect(() => {
     handleCreateUser();
-    if (user) {
-      router.push("/dashboard");
-    }
   }, [user]);
 
   const handleGetStarted = () => {
@@ -97,7 +94,7 @@ export default function Home() {
           whileTap={{ scale: 0.95 }}
         >
           <Button onClick={handleGetStarted} size="lg" className="px-6 py-3 text-lg shadow-lg hover:shadow-xl transition-all">
-            Get Started
+            {user? "Go to Dashboard" : "Get Started"  }
           </Button>
         </motion.div>
       </section>

@@ -60,13 +60,9 @@ function Sidebar() {
 
       {/* Bottom Section - Progress */}
       <div className="w-[85%]">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${(filesCount / 10) * 100}%` }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
+        <div>
           <Progress value={(filesCount / 10) * 100} />
-        </motion.div>
+        </div>
         <p className="text-sm mt-2 text-center text-gray-600">
           {filesCount} out of 10 uploaded
         </p>
