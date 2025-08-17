@@ -84,8 +84,8 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2 }}
         >
-          Notamind is your intelligent memory assistant — capture, organize,
-          and recall your thoughts effortlessly with the power of AI.
+         Seamlessly upload and interact with your PDFs.
+         NotaMind makes your documents smarter.
         </motion.p>
 
         <motion.div
