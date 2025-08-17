@@ -47,3 +47,18 @@ export const getFile = query({
       .first();
   },
 });
+
+
+export const getUserFiles = query({
+  args: {
+    email : v.string(),
+  }, 
+  handler: async (ctx, args) => {
+    const result =  await ctx.db
+      .query("PdfStorage")
+      .filter((q) => q.eq(q.field("createdBy"), args.email))
+      .collect();
+      
+  return result
+  },
+});

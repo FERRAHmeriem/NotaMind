@@ -8,7 +8,7 @@ import { useQuery } from 'convex/react';
 import TextEditor from '../component/textEditor';
 import { LoaderCircle } from 'lucide-react';
 function Page() {
-    const { fileId } = useParams();
+    const {  fileId } = useParams();
     
     const fileData = useQuery(api.pdfStorage.getFile ,{ pdfId: fileId });
     useEffect(() => {
@@ -31,7 +31,7 @@ function Page() {
             </div>
             <div className='basis-1/2 '>
                 {/* text editor */}
-                <TextEditor />
+                <TextEditor fileId={fileId} />
             </div>
         </div>
     </div>

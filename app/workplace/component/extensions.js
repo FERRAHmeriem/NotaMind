@@ -3,7 +3,7 @@
 import ChatSession from '@/Configs/ModelAi';
 import { api } from '@/convex/_generated/api';
 import { useUser } from '@clerk/nextjs';
-import { useAction, useMutation, useQuery } from 'convex/react';
+import { useAction, useMutation } from 'convex/react';
 import {
   AlignCenter,
   AlignJustify,
@@ -90,9 +90,9 @@ function Extensions({ editor }) {
       const finalAnswer = await AiModelResult.response.text();
       editor.commands.setContent(
         AllText +
-          '<p><strong></br></br>Réponse:</br></strong> ' +
+          '<p>&nbsp;&nbsp;&nbsp;' +
           finalAnswer +
-          '</p>'
+          '</br></br></p>'
       );
     } catch (error) {
       editor.commands.insertContent(
@@ -176,7 +176,7 @@ function Extensions({ editor }) {
             </button>
 
             {/* Sparkle AI Button */}
-            <div className="relative group">
+            <div className=" fixed z-20 bottom-10 right-15 group">
               <button
                 onClick={handleClickAi}
                 disabled={loading}

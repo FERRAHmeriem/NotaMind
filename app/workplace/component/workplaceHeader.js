@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { UserButton } from '@clerk/nextjs'
+import { Button } from '@/components/ui/button'
 
 function WorkplaceHeader({ fileName }) {
   return (
@@ -23,10 +24,9 @@ function WorkplaceHeader({ fileName }) {
       </span>
       </p>
 
-      {/* Bouton utilisateur à droite */}
-      <div className="transform scale-155">
+        <div className="transform scale-155">
         <UserButton />
-      </div>
+        </div>
     </div>
   )
 }

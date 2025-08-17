@@ -9,6 +9,8 @@ import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Color from '@tiptap/extension-color'
 import { api } from '@/convex/_generated/api';
+import { useQuery } from 'convex/react'
+import { useEffect } from 'react'
 
 const TextEditor = ({fileId}) => {
   const editor = useEditor({
@@ -34,8 +36,12 @@ const TextEditor = ({fileId}) => {
 
 
 
-  const getNotes = useQuery(api.notes.getNotes, fileId : fileId);
+const getNotes = useQuery(api.notes.GetNotes, {fileId : fileId});
+console.log(getNotes);
 
+useEffect(()=>{
+  editor&&editor.commands.setContent(getNotes);
+} , [getNotes])
   return (
     <div className="overflow-auto h-[90vh] mb-6">
       <Extensions editor={editor } />
