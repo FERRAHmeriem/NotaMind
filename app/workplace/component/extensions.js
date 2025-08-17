@@ -193,7 +193,7 @@ function Extensions({ editor }) {
                 )}
               </button>
               {!loading && (
-                <span className="absolute -bottom-0 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all bg-purple-400 text-stone-800 text-xs px-2 py-1 rounded shadow whitespace-nowrap">
+                <span className="absolute -bottom-1 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all bg-purple-400 text-stone-800 text-xs px-2 py-1 rounded shadow whitespace-nowrap">
                   Use AI ✨
                 </span>
 
