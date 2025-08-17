@@ -176,7 +176,7 @@ function Extensions({ editor }) {
             </button>
 
             {/* Sparkle AI Button */}
-            <div className=" fixed z-20 bottom-10 right-15 group">
+            <div className=" fixed z-20 bottom-10 right-20 group">
               <button
                 onClick={handleClickAi}
                 disabled={loading}
