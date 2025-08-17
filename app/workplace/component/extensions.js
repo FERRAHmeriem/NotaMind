@@ -174,31 +174,36 @@ function Extensions({ editor }) {
             >
               <AlignJustify />
             </button>
-
-            {/* Sparkle AI Button */}
-            <div className=" fixed z-20 bottom-10 right-20 group">
+            <div className="fixed z-20 bottom-10 right-20 group">
               <button
                 onClick={handleClickAi}
                 disabled={loading}
-                className={`p-3 text-purple-600 bg-white rounded-full transition-all duration-300 shadow-md ${
-                  loading
+                className={`relative p-3 text-purple-600 bg-white rounded-full transition-all duration-300 shadow-md overflow-hidden
+                  ${loading
                     ? 'opacity-70 cursor-not-allowed'
-                    : 'hover:rotate-6 hover:scale-110 hover:bg-gradient-to-r hover:from-fuchsia-500 hover:to-purple-500 hover:text-white'
-                }`}
+                    : 'hover:rotate-6 hover:scale-110 hover:text-white'
+                  }`}
               >
+                {/* Effet glow animé */}
+                {!loading && (
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-500 opacity-70 blur-md animate-pulse"></span>
+                )}
                 {loading ? (
-                  <span className="text-xs animate-pulse font-medium"><LoaderCircle className="animate-spin text-purple-500" /></span>
+                  <span className="text-xs animate-pulse font-medium z-10 relative">
+                    <LoaderCircle className="animate-spin text-purple-500" />
+                  </span>
                 ) : (
-                  <Sparkle className="w-6 h-6 transition-all duration-300 group-hover:rotate-12 group-hover:scale-125" />
+                  <Sparkle className="w-6 h-6 z-10 relative transition-all duration-300 group-hover:rotate-12 group-hover:scale-125" />
                 )}
               </button>
+
               {!loading && (
                 <span className="absolute -bottom-1 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all bg-purple-400 text-stone-800 text-xs px-2 py-1 rounded shadow whitespace-nowrap">
                   Use AI ✨
                 </span>
-
               )}
             </div>
+
           </div>
         </div>
       </div>
